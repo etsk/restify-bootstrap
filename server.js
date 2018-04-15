@@ -7,9 +7,29 @@ var options = {
 
 var server = restify.createServer(options);
 
+// EXAMPLE 2
+//curl -i -X PUT localhost:8080/lists/mylist --data '{"hello":"there"}' -H 'content-type: application/json'
+// server.use(function(req, res, next){
+// 	console.log('middleware here', req.body); //cannot see body
+// 	next();
+// });
+
+//helps to access the request body contents received
+server.use(restify.plugins.bodyParser({
+	maxBodySize: 10 * 1024
+}));
+
+// server.use(function(req, res, next){
+// 	console.log('middleware2 here', req.body); //can see body
+// 	next();
+// });
+//END EXAMPLE 2
+
+
+// EXAMPLE 1
 // //logs what happens after the REST web service is called
 // server.on('after', function(){
-// 	//argements returns the request and response objects which returns a lot of things. too many.
+// 	//arguments returns the request and response objects which returns a lot of things. too many.
 // 	console.log('after', arguments); 
 // }); 
 
@@ -24,6 +44,7 @@ server.on('after', restify.plugins.auditLogger({
 	event: 'after',
 	printLog : true
 }));
+// END EXAMPLE 1
 
 module.exports = server; //this helps routes get the value
 

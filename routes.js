@@ -1,5 +1,7 @@
 var server = require('./server');
-var resources = require('./resources/index');
+var resources = require('./resources');
+var validating = require('./middleware/validating');
+var schemas = require('./schemas');
 
 // Lists
 
@@ -9,13 +11,14 @@ var resources = require('./resources/index');
 
 
 server.get('/lists', resources.lists.list); //gets lists //therefore define another handler function
-server.put('/lists/:list', resources.lists.create); // PUT /lists/mylist - mylist url part will be available in the list attribute // creates a list
+//validating helps to validate the schema
+server.put('/lists/:list', validating(schemas.list), resources.lists.create); // PUT /lists/mylist - mylist url part will be available in the list attribute // creates a list
 server.del('/lists/:list', resources.lists.del) //delete list
 
 // Items
 
 server.get('/lists/:list/items', resources.items.list);
-server.post('/lists/:list/items', resources.items.create);
+server.post('/lists/:list/items', validating(schemas.item), resources.items.create);
 server.del('/lists/:list/items/:item', resources.items.del);
 
 
